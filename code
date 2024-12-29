@@ -1,0 +1,46 @@
+import random
+
+def place_queens(n):
+    # Create an empty nxn matrix
+    matrix = [[None for _ in range(n)] for _ in range(n)]
+
+    # Helper function to mark row, column, and diagonals with 0
+    def mark_attacked_cells(matrix, row, col):
+        for i in range(n):
+            if matrix[row][i] is None:  # Mark the row
+                matrix[row][i] = 0
+            if matrix[i][col] is None:  # Mark the column
+                matrix[i][col] = 0
+            if row + i < n and col + i < n and matrix[row + i][col + i] is None:
+                matrix[row + i][col + i] = 0  # Mark bottom-right diagonal
+            if row - i >= 0 and col - i >= 0 and matrix[row - i][col - i] is None:
+                matrix[row - i][col - i] = 0  # Mark top-left diagonal
+            if row + i < n and col - i >= 0 and matrix[row + i][col - i] is None:
+                matrix[row + i][col - i] = 0  # Mark bottom-left diagonal
+            if row - i >= 0 and col + i < n and matrix[row - i][col + i] is None:
+                matrix[row - i][col + i] = 0  # Mark top-right diagonal
+
+    # Randomly place the first queen
+    first_row = random.randint(0, n - 1)
+    first_col = random.randint(0, n - 1)
+    matrix[first_row][first_col] = 1
+    mark_attacked_cells(matrix, first_row, first_col)
+
+    # Find remaining None cells for the second queen
+    remaining_none_cells = [(i, j) for i in range(n) for j in range(n) if matrix[i][j] is None]
+
+    # Randomly select a position for the second queen
+    if remaining_none_cells:
+        second_row, second_col = random.choice(remaining_none_cells)
+        matrix[second_row][second_col] = 1
+        mark_attacked_cells(matrix, second_row, second_col)
+
+    return matrix
+
+# Example usage
+n = 5  # Change n for different board sizes
+result_matrix = place_queens(n)
+
+# Print the resulting matrix
+for row in result_matrix:
+    print(row)
